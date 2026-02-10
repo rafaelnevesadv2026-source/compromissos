@@ -28,12 +28,12 @@ export default function NovoCompromissoPage() {
     setAlertas(prev => prev.includes(v) ? prev.filter(a => a !== v) : [...prev, v]);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!titulo.trim()) {
       toast.error('Informe o título do compromisso');
       return;
     }
-    addCompromisso({ titulo: titulo.trim(), data, hora, observacao, categoria, prioridade, status, recorrencia, alerta: alertas });
+    await addCompromisso({ titulo: titulo.trim(), data, hora, observacao, categoria, prioridade, status, recorrencia, alerta: alertas });
     toast.success('Compromisso criado!');
     navigate(`/dia/${data}`);
   };
