@@ -32,6 +32,7 @@ function mapRow(row: any): Compromisso {
     status: row.status as Status,
     recorrencia: row.recorrencia || 'nenhuma',
     alerta: row.alerta || [],
+    anexos: row.anexos || [],
     dataCriacao: row.created_at,
   };
 }
@@ -80,6 +81,7 @@ export function CompromissosProvider({ children }: { children: React.ReactNode }
       status: c.status,
       recorrencia: c.recorrencia,
       alerta: c.alerta,
+      anexos: c.anexos || [],
     });
     if (error) {
       toast.error('Erro ao criar compromisso');

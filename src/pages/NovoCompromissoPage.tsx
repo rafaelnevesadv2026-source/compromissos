@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { ChevronLeft, Save } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import FileUpload from '@/components/FileUpload';
 
 export default function NovoCompromissoPage() {
   const [searchParams] = useSearchParams();
@@ -23,6 +24,7 @@ export default function NovoCompromissoPage() {
   const [status, setStatus] = useState<Status>('pendente');
   const [recorrencia, setRecorrencia] = useState<Recorrencia>('nenhuma');
   const [alertas, setAlertas] = useState<string[]>([]);
+  const [anexos, setAnexos] = useState<string[]>([]);
 
   const toggleAlerta = (v: string) => {
     setAlertas(prev => prev.includes(v) ? prev.filter(a => a !== v) : [...prev, v]);
@@ -33,7 +35,7 @@ export default function NovoCompromissoPage() {
       toast.error('Informe o título do compromisso');
       return;
     }
-    await addCompromisso({ titulo: titulo.trim(), data, hora, observacao, categoria, prioridade, status, recorrencia, alerta: alertas });
+    await addCompromisso({ titulo: titulo.trim(), data, hora, observacao, categoria, prioridade, status, recorrencia, alerta: alertas, anexos });
     toast.success('Compromisso criado!');
     navigate(`/dia/${data}`);
   };
@@ -168,6 +170,12 @@ export default function NovoCompromissoPage() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Anexos */}
+        <div>
+          <Label className="text-xs text-muted-foreground mb-2 block">Anexos</Label>
+          <FileUpload files={anexos} onFilesChange={setAnexos} />
         </div>
 
         {/* Save button */}

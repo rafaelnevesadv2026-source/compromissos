@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCompromissos } from '@/contexts/CompromissosContext';
 import { sortByTime, getCategoriaColor, getStatusColor, getStatusBgColor, formatDateFull, getPrioridadeColor } from '@/lib/compromisso-utils';
-import { ChevronLeft, Plus, CheckCircle2, Circle, Clock, Trash2 } from 'lucide-react';
+import { ChevronLeft, Plus, CheckCircle2, Circle, Clock, Trash2, Focus } from 'lucide-react';
 import { Status } from '@/types/compromisso';
 
 export default function DiaPage() {
@@ -91,6 +91,12 @@ export default function DiaPage() {
                       >
                         <Trash2 className="w-4 h-4 text-muted-foreground" />
                       </button>
+                      <Link
+                        to={`/foco/${c.id}`}
+                        className="p-1 hover:bg-primary/20 rounded transition-colors"
+                      >
+                        <Focus className="w-4 h-4 text-primary" />
+                      </Link>
                     </div>
                   </div>
 

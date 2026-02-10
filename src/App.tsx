@@ -14,6 +14,7 @@ import NovoCompromissoPage from "@/pages/NovoCompromissoPage";
 import HistoricoPage from "@/pages/HistoricoPage";
 import EstatisticasPage from "@/pages/EstatisticasPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
+import FocoPage from "@/pages/FocoPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ function ProtectedRoutes() {
           <Route path="/historico" element={<HistoricoPage />} />
           <Route path="/estatisticas" element={<EstatisticasPage />} />
           <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+          <Route path="/foco/:id" element={<FocoPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AppLayout>
