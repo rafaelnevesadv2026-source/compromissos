@@ -17,6 +17,7 @@ export type Database = {
       compromissos: {
         Row: {
           alerta: string[]
+          anexos: string[]
           categoria: string
           created_at: string
           data: string
@@ -31,6 +32,7 @@ export type Database = {
         }
         Insert: {
           alerta?: string[]
+          anexos?: string[]
           categoria?: string
           created_at?: string
           data: string
@@ -45,6 +47,7 @@ export type Database = {
         }
         Update: {
           alerta?: string[]
+          anexos?: string[]
           categoria?: string
           created_at?: string
           data?: string

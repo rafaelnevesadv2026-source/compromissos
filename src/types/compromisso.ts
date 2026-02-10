@@ -14,6 +14,7 @@ export interface Compromisso {
   status: Status;
   recorrencia: Recorrencia;
   alerta: string[]; // e.g. ['1d', '1h', '30m', '10m']
+  anexos: string[]; // file paths in storage
   dataCriacao: string;
 }
 
