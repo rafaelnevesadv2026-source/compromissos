@@ -28,12 +28,17 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-50 glass-card border-b border-border/50 px-4 py-3">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="font-display text-lg font-bold text-gradient-primary leading-tight">
-              MEUS COMPROMISSOS
-            </h1>
-            <p className="text-[10px] text-muted-foreground tracking-widest uppercase">
-              Agenda Compromisso Cumprido
-            </p>
+            <div className="flex items-center gap-2">
+              <img src="/logo_foco_total_final.png" alt="Logo Foco Total" className="w-8 h-8 object-contain" />
+              <div>
+                <h1 className="font-display text-lg font-bold text-gradient-primary leading-tight">
+                  FOCO TOTAL
+                </h1>
+                <p className="text-[10px] text-muted-foreground tracking-widest uppercase">
+                  Sua Agenda de Alta Performance
+                </p>
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button
