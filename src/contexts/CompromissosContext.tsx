@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { Compromisso, Categoria, Status } from '@/types/compromisso';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAgenda } from '@/contexts/AgendaContext';
 import { toast } from 'sonner';
 
 interface CompromissosContextType {
@@ -34,11 +35,14 @@ function mapRow(row: any): Compromisso {
     alerta: row.alerta || [],
     anexos: row.anexos || [],
     dataCriacao: row.created_at,
+    agenda_id: row.agenda_id || undefined,
+    criado_por: row.criado_por || undefined,
   };
 }
 
 export function CompromissosProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
+  const { allAccessibleAgendaIds } = useAgenda();
   const [compromissos, setCompromissos] = useState<Compromisso[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +53,7 @@ export function CompromissosProvider({ children }: { children: React.ReactNode }
       return;
     }
     setLoading(true);
+    // RLS handles filtering - just fetch all accessible
     const { data, error } = await supabase
       .from('compromissos')
       .select('*')
@@ -62,15 +67,27 @@ export function CompromissosProvider({ children }: { children: React.ReactNode }
       setCompromissos((data || []).map(mapRow));
     }
     setLoading(false);
-  }, [user]);
+  }, [user, allAccessibleAgendaIds]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
+  // Realtime subscription for shared agenda updates
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel('compromissos-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'compromissos' }, () => {
+        refresh();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, refresh]);
+
   const addCompromisso = useCallback(async (c: Omit<Compromisso, 'id' | 'dataCriacao'>) => {
     if (!user) return;
-    const { error } = await supabase.from('compromissos').insert({
+    const insertData: any = {
       user_id: user.id,
       titulo: c.titulo,
       data: c.data,
@@ -82,7 +99,10 @@ export function CompromissosProvider({ children }: { children: React.ReactNode }
       recorrencia: c.recorrencia,
       alerta: c.alerta,
       anexos: c.anexos || [],
-    });
+    };
+    if (c.agenda_id) insertData.agenda_id = c.agenda_id;
+    if (c.criado_por) insertData.criado_por = c.criado_por;
+    const { error } = await supabase.from('compromissos').insert(insertData);
     if (error) {
       toast.error('Erro ao criar compromisso');
       console.error(error);

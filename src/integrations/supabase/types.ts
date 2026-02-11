@@ -14,12 +14,67 @@ export type Database = {
   }
   public: {
     Tables: {
+      agenda_compartilhada: {
+        Row: {
+          agenda_id: string
+          created_at: string
+          id: string
+          permissao: string
+          usuario_id: string
+        }
+        Insert: {
+          agenda_id: string
+          created_at?: string
+          id?: string
+          permissao?: string
+          usuario_id: string
+        }
+        Update: {
+          agenda_id?: string
+          created_at?: string
+          id?: string
+          permissao?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenda_compartilhada_agenda_id_fkey"
+            columns: ["agenda_id"]
+            isOneToOne: false
+            referencedRelation: "agendas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agendas: {
+        Row: {
+          created_at: string
+          dono_id: string
+          id: string
+          nome_agenda: string
+        }
+        Insert: {
+          created_at?: string
+          dono_id: string
+          id?: string
+          nome_agenda?: string
+        }
+        Update: {
+          created_at?: string
+          dono_id?: string
+          id?: string
+          nome_agenda?: string
+        }
+        Relationships: []
+      }
       compromissos: {
         Row: {
+          agenda_id: string | null
           alerta: string[]
           anexos: string[]
           categoria: string
           created_at: string
+          criado_por: string | null
           data: string
           hora: string
           id: string
@@ -31,10 +86,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          agenda_id?: string | null
           alerta?: string[]
           anexos?: string[]
           categoria?: string
           created_at?: string
+          criado_por?: string | null
           data: string
           hora: string
           id?: string
@@ -46,10 +103,12 @@ export type Database = {
           user_id: string
         }
         Update: {
+          agenda_id?: string | null
           alerta?: string[]
           anexos?: string[]
           categoria?: string
           created_at?: string
+          criado_por?: string | null
           data?: string
           hora?: string
           id?: string
@@ -60,7 +119,15 @@ export type Database = {
           titulo?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "compromissos_agenda_id_fkey"
+            columns: ["agenda_id"]
+            isOneToOne: false
+            referencedRelation: "agendas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -85,7 +152,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      user_can_edit_agenda: {
+        Args: { _agenda_id: string; _user_id: string }
+        Returns: boolean
+      }
+      user_has_agenda_access: {
+        Args: { _agenda_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
