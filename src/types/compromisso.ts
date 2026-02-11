@@ -16,6 +16,8 @@ export interface Compromisso {
   alerta: string[]; // e.g. ['1d', '1h', '30m', '10m']
   anexos: string[]; // file paths in storage
   dataCriacao: string;
+  agenda_id?: string;
+  criado_por?: string;
 }
 
 export const CATEGORIAS: { value: Categoria; label: string; color: string }[] = [

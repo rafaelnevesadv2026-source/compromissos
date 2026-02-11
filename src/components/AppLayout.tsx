@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Clock, Plus, BarChart3, History, Settings, Search } from 'lucide-react';
+import { LayoutDashboard, Calendar, Clock, Plus, BarChart3, History, Settings, Search, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useCompromissos } from '@/contexts/CompromissosContext';
@@ -42,6 +42,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
+            <Link
+              to="/agendas"
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+            >
+              <Users className="w-5 h-5 text-muted-foreground" />
+            </Link>
             <Link
               to="/configuracoes"
               className="p-2 rounded-lg hover:bg-secondary transition-colors"

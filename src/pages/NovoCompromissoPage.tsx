@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCompromissos } from '@/contexts/CompromissosContext';
+import { useAgenda } from '@/contexts/AgendaContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { CATEGORIAS, PRIORIDADES, STATUS_OPTIONS, ALERTAS, Categoria, Prioridade, Status, Recorrencia } from '@/types/compromisso';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +16,8 @@ export default function NovoCompromissoPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addCompromisso } = useCompromissos();
+  const { agendas, sharedWithMe, allAccessibleAgendaIds } = useAgenda();
+  const { user } = useAuth();
 
   const [titulo, setTitulo] = useState('');
   const [data, setData] = useState(searchParams.get('data') || new Date().toISOString().split('T')[0]);
@@ -25,6 +29,7 @@ export default function NovoCompromissoPage() {
   const [recorrencia, setRecorrencia] = useState<Recorrencia>('nenhuma');
   const [alertas, setAlertas] = useState<string[]>([]);
   const [anexos, setAnexos] = useState<string[]>([]);
+  const [selectedAgendaId, setSelectedAgendaId] = useState<string>(agendas[0]?.id || '');
 
   const toggleAlerta = (v: string) => {
     setAlertas(prev => prev.includes(v) ? prev.filter(a => a !== v) : [...prev, v]);
@@ -35,7 +40,7 @@ export default function NovoCompromissoPage() {
       toast.error('Informe o título do compromisso');
       return;
     }
-    await addCompromisso({ titulo: titulo.trim(), data, hora, observacao, categoria, prioridade, status, recorrencia, alerta: alertas, anexos });
+    await addCompromisso({ titulo: titulo.trim(), data, hora, observacao, categoria, prioridade, status, recorrencia, alerta: alertas, anexos, agenda_id: selectedAgendaId || undefined, criado_por: user?.id });
     toast.success('Compromisso criado!');
     navigate(`/dia/${data}`);
   };
@@ -70,6 +75,27 @@ export default function NovoCompromissoPage() {
           <Label className="text-xs text-muted-foreground mb-1.5 block">Observação</Label>
           <Textarea value={observacao} onChange={e => setObservacao(e.target.value)} placeholder="Detalhes..." className="bg-secondary border-border/50 min-h-[80px]" />
         </div>
+
+        {/* Agenda */}
+        {agendas.length > 0 && (
+          <div>
+            <Label className="text-xs text-muted-foreground mb-2 block">Agenda</Label>
+            <div className="flex flex-wrap gap-2">
+              {agendas.map(a => (
+                <button
+                  key={a.id}
+                  onClick={() => setSelectedAgendaId(a.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border
+                    ${selectedAgendaId === a.id
+                      ? 'bg-accent text-accent-foreground border-accent'
+                      : 'border-border/50 text-muted-foreground hover:border-accent/50'}`}
+                >
+                  {a.nome_agenda}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Categoria */}
         <div>
